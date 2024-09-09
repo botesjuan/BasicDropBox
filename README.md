@@ -278,6 +278,8 @@ sudo reboot
 
 >Step 2: Change MAC Address and Make It Persistent After Reboot  
 
+>Result, Spoofing a Raspberry Pi's mac address.  
+
 ```
 sudo ip link set eth0 down
 sudo macchanger -m XX:XX:XX:XX:XX:XX eth0
