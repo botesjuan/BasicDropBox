@@ -41,7 +41,7 @@ iface eth0 inet dhcp
 
 # Extra Tools & Services Install
 
->Install extra Penetration Testing Tools, Services, daemons:
+>Install extra Penetration Testing Tools, Services, wordlist, daemons:
 
 ```
 sudo apt update && sudo apt upgrade -y
@@ -49,6 +49,11 @@ sudo apt install hostapd dnsmasq
 gobuster
 feroxbuster
 bloodhound
+rlwrap
+searchsploit --update
+xsltproc
+jq
+apt -y install seclists
 ```
 
 ----  
