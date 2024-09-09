@@ -280,24 +280,38 @@ Let me know if you need further assistance!
 
 ```
 [Unit]
-Description=Spoofing MAC address on %I
+Description=Spoof MAC address for %i
 Wants=network-pre.target
 Before=network-pre.target
 BindsTo=sys-subsystem-net-devices-%i.device
 After=sys-subsystem-net-devices-%i.device
 
 [Service]
-ExecStart=/usr/bin/macchanger -e %I
 Type=oneshot
+ExecStart=/usr/bin/macchanger -m XX:XX:XX:XX:XX:XX %i
+ExecStartPost=/usr/sbin/ip link set dev %i up
 
 [Install]
-WantedBy=multi-user. Target
+WantedBy=multi-user.target
 ```  
 
->Then...
+>Enable the macspoof@.service  
 
 ```
 sudo systemctl enable macspoof@eth0.service
+```
+
+>Start the Service  
+
+```
+sudo systemctl start macspoof@eth0.service
+sudo reboot
+```
+
+>Verify the MAC Address  
+
+```
+ip addr show eth0
 ```
 
 ----  
