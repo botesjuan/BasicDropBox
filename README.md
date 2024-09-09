@@ -256,10 +256,6 @@ To allow devices connecting to your access point to access the internet, you'll 
    - **Port:** `22`
    - **Connection Type:** SSH
 
-This should establish a wireless SSH connection to your Raspberry Pi.
-
-Let me know if you need further assistance!
-
 ----  
 
 # Change Hostname & MAC Address Permanent  
