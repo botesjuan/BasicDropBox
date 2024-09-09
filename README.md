@@ -5,6 +5,18 @@
 
 ----  
 
+>High level setup steps:
+
+1. Install Kali Linux on Raspberry Pi4
+2. Install extra Penetration Testing Tools, Services, daemons, etc.
+3. Setup Wireless access point on Kali OS
+4. Change Ethernet MAC address to bypass Network Access Control (NAC)
+5. Wiring power direct to GPIO connectors, and wire the seven segment display to GPIO pin outs.
+6. Run a python script at startup as service (Create authentic look of physical device disguise with 7 segement LED display)
+7. SSH Connect via WiFi IP.
+
+----  
+
 # Kali Linux WiFi Access Point Setup  
 
 >To set up your Raspberry Pi 4 (running Kali Linux) as a wireless access point and use SSH (via PuTTY) to connect from your laptop, follow these steps:
