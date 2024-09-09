@@ -8,7 +8,7 @@
 >High level setup steps:
 
 1. Install Kali Linux on Raspberry Pi4
-2. Preparing networking, changing default password of kali user.
+2. Preparing networking, NTP timezone, & changing default password of kali user.
 3. Install extra Penetration Testing Tools, Services, GPIO Libraries, daemons, etc.
 4. Setup Wireless access point on Kali OS
 5. Change Ethernet MAC address to bypass Network Access Control (NAC)
@@ -36,6 +36,8 @@ iface eth0 inet dhcp
 ```
 
 >Change Kali user password `sudo passwd kali`
+
+>Set the timezone where the pentest drop-box is GEO located: `sudo timedatectl set-timezone Africa/Johannesburg`  
 
 ----  
 
