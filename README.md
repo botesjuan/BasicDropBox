@@ -262,7 +262,8 @@ Let me know if you need further assistance!
 
 # Change Hostname & MAC Address Permanent  
 
->Step 1: Change Hostname
+## Change Hostname  
+
 >To change the hostname on Kali Linux: Edit the `/etc/hostname` file:
 
 >Replace the current hostname with your desired new hostname.
@@ -272,26 +273,32 @@ Let me know if you need further assistance!
 >Find the line that says `127.0.1.1 old-hostname` (where old-hostname is your current hostname).
 >Change old-hostname to your new hostname (e.g., new-hostname):
 
-```
-sudo reboot
-```
+## Make MAC Address Persistent  
 
->Step 2: Change MAC Address and Make It Persistent After Reboot  
-
->Result, Spoofing a Raspberry Pi's mac address.  
+>To ensure the MAC address remains after reboot, create file: `sudo mousepad /etc/systemd/system/macspoof@.service` adding below line:
+>Insert Content below in new file:
 
 ```
-sudo ip link set eth0 down
-sudo macchanger -m XX:XX:XX:XX:XX:XX eth0
-sudo ip link set eth0 up  
-```
+[Unit]
+Description=Spoofing MAC address on %I
+Wants=network-pre.target
+Before=network-pre.target
+BindsTo=sys-subsystem-net-devices-%i.device
+After=sys-subsystem-net-devices-%i.device
 
-## Make the MAC Address Persistent After Reboot  
->To ensure the MAC address remains after reboot: `sudo mousepad /boot/cmdline.txt` adding below line:
+[Service]
+ExecStart=/usr/bin/macchanger -e %I
+Type=oneshot
 
-```
-smsc95xx.macaddr=aa:bb:cc:dd:ee:ff
+[Install]
+WantedBy=multi-user. Target
 ```  
+
+>Then...
+
+```
+sudo systemctl enable macspoof@eth0.service
+```
 
 ----  
 
