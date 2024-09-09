@@ -59,7 +59,6 @@ apt -y install seclists
 >Install raspberry pi GPIO libraries:
 
 ```
-sudo apt install raspi-gpio
 sudo apt install python3-rpi.gpio
 ```  
 
@@ -260,11 +259,14 @@ This should establish a wireless SSH connection to your Raspberry Pi.
 Let me know if you need further assistance!
 
 ----  
+
 # Install Python Script as Service  
 
 >Automatically run your Python program at boot on your Raspberry Pi running Kali Linux, setting it up using systemd.
+>Confirm prerequisite of `python3-rpi.gpio` is installed before starting python service.  
 
-## Step 1: Create a Service File for systemd
+## Step 1: Create a Service File for systemd  
+
 >Create a new service file for your Python program:
 
 ```bash
@@ -293,7 +295,7 @@ WantedBy=multi-user.target
 
 ## Step 2: Reload systemd and Enable the Service  
 
->Reload systemd to recognize the new service:
+>Reload systemd to recognize the new service:  
 
 ```
 sudo systemctl daemon-reload
@@ -315,14 +317,16 @@ sudo systemctl status seven_segment.service
 ```
 :You should see that the service is running. If there are any errors, check the logs for more details.
 
-## Step 3: Reboot to Test
->Reboot your Raspberry Pi to confirm the script runs automatically at startup:
+## Step 3: Reboot to Test  
+
+>Reboot your Raspberry Pi to confirm the script runs automatically at startup:  
 
 ```
 sudo reboot
 ```
 
-## Step 4: Debugging the Service (if necessary)
+## Step 4: Debugging the Service  
+
 >If the service doesn't start correctly, you can check the logs with:
 
 ```
@@ -331,6 +335,4 @@ journalctl -u seven_segment.service
 >This will help you identify any errors or issues that might be occurring.
 
 ----  
-
-
 
