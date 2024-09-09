@@ -9,7 +9,7 @@
 
 1. Install Kali Linux on Raspberry Pi4
 2. Preparing networking, changing default password of kali user.
-3. Install extra Penetration Testing Tools, Services, daemons, etc.
+3. Install extra Penetration Testing Tools, Services, GPIO Libraries, daemons, etc.
 4. Setup Wireless access point on Kali OS
 5. Change Ethernet MAC address to bypass Network Access Control (NAC)
 6. Wiring power direct to GPIO connectors, and wire the seven segment display to GPIO pin outs.
@@ -55,6 +55,13 @@ xsltproc
 jq
 apt -y install seclists
 ```
+
+>Install raspberry pi GPIO libraries:
+
+```
+sudo apt install raspi-gpio
+sudo apt install python3-rpi.gpio
+```  
 
 ----  
 
@@ -252,9 +259,78 @@ This should establish a wireless SSH connection to your Raspberry Pi.
 
 Let me know if you need further assistance!
 
+----  
+# Install Python Script as Service  
 
-sudo apt update
-sudo apt upgrade -y
-sudo apt install ffmpeg v4l-utils python3-pip python3-dev libssl-dev libcurl4-openssl-dev libjpeg-dev zlib1g-dev libffi-dev
+>Automatically run your Python program at boot on your Raspberry Pi running Kali Linux, setting it up using systemd.
+
+## Step 1: Create a Service File for systemd
+>Create a new service file for your Python program:
+
+```bash
+sudo nano /etc/systemd/system/seven_segment.service
+```
+
+>Add the following content to the service file, modifying the path to your Python script if necessary:
+
+```ini
+[Unit]
+Description=Seven Segment Display Script
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /path/to/your/seven_segment.py
+Restart=on-failure
+User=pi  # Replace 'pi' with your Raspberry Pi username if different
+
+[Install]
+WantedBy=multi-user.target
+```
+
+>ExecStart: Replace `/path/to/your/seven_segment.py` with the full path to your Python script.
+>User: Comment out username of kali for pi to run as root.  
+
+## Step 2: Reload systemd and Enable the Service  
+
+>Reload systemd to recognize the new service:
+
+```
+sudo systemctl daemon-reload
+```  
+>Enable the service so it runs at boot:
+
+```
+sudo systemctl enable seven_segment.service
+```  
+>Start the service immediately to test if it works:
+
+```
+sudo systemctl start seven_segment.service
+```
+>Check the status of the service to ensure it's running without errors:
+
+```
+sudo systemctl status seven_segment.service
+```
+:You should see that the service is running. If there are any errors, check the logs for more details.
+
+## Step 3: Reboot to Test
+>Reboot your Raspberry Pi to confirm the script runs automatically at startup:
+
+```
+sudo reboot
+```
+
+## Step 4: Debugging the Service (if necessary)
+>If the service doesn't start correctly, you can check the logs with:
+
+```
+journalctl -u seven_segment.service
+```
+>This will help you identify any errors or issues that might be occurring.
+
+----  
+
 
 
