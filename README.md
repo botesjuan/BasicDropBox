@@ -260,6 +260,39 @@ Let me know if you need further assistance!
 
 ----  
 
+# Change Hostname & MAC Address Permanent  
+
+>Step 1: Change Hostname
+>To change the hostname on Kali Linux: Edit the `/etc/hostname` file:
+
+>Replace the current hostname with your desired new hostname.
+
+>Edit the `/etc/hosts` file:
+
+>Find the line that says `127.0.1.1 old-hostname` (where old-hostname is your current hostname).
+>Change old-hostname to your new hostname (e.g., new-hostname):
+
+```
+sudo reboot
+```
+
+>Step 2: Change MAC Address and Make It Persistent After Reboot  
+
+```
+sudo ip link set eth0 down
+sudo macchanger -m XX:XX:XX:XX:XX:XX eth0
+sudo ip link set eth0 up  
+```
+
+## Make the MAC Address Persistent After Reboot  
+>To ensure the MAC address remains after reboot: `sudo mousepad /boot/cmdline.txt` adding below line:
+
+```
+smsc95xx.macaddr=aa:bb:cc:dd:ee:ff
+```  
+
+----  
+
 # Install Python Script as Service  
 
 >Automatically run your Python program at boot on your Raspberry Pi running Kali Linux, setting it up using systemd.
