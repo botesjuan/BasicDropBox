@@ -8,12 +8,48 @@
 >High level setup steps:
 
 1. Install Kali Linux on Raspberry Pi4
-2. Install extra Penetration Testing Tools, Services, daemons, etc.
-3. Setup Wireless access point on Kali OS
-4. Change Ethernet MAC address to bypass Network Access Control (NAC)
-5. Wiring power direct to GPIO connectors, and wire the seven segment display to GPIO pin outs.
-6. Run a python script at startup as service (Create authentic look of physical device disguise with 7 segement LED display)
-7. SSH Connect via WiFi IP.
+2. Preparing networking, changing default password of kali user.
+3. Install extra Penetration Testing Tools, Services, daemons, etc.
+4. Setup Wireless access point on Kali OS
+5. Change Ethernet MAC address to bypass Network Access Control (NAC)
+6. Wiring power direct to GPIO connectors, and wire the seven segment display to GPIO pin outs.
+7. Run a python script at startup as service (Create authentic look of physical device disguise with 7 segement LED display)
+8. SSH Connect via WiFi IP.
+
+----  
+
+# Install Kali on Raspberry Pi 4
+
+>Download the 7z from Offsec.
+>Use `balenaEtcher` as Local administrator on Windows 10 workstation to burn image to 32GB SD memory card.
+
+----  
+
+# Prepare Kali on Raspberry Pi  
+
+>Chane the ethernet `eth0` to automatically get DHCP IP address.
+>Edit `/etc/network/interfaces`  
+
+```
+auto eth0
+iface eth0 inet dhcp
+```
+
+>Change Kali user password `sudo passwd kali`
+
+----  
+
+# Extra Tools & Services Install
+
+>Install extra Penetration Testing Tools, Services, daemons:
+
+```
+sudo apt update && sudo apt upgrade -y
+sudo apt install hostapd dnsmasq
+gobuster
+feroxbuster
+bloodhound
+```
 
 ----  
 
