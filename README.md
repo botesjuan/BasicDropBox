@@ -390,3 +390,11 @@ journalctl -u seven_segment.service
 
 ----  
 
+![basic-drop-box-spray.jpg](/basic-drop-box-spray.jpg)  
+
+>The inside of the air freshner spray drop box containing raspberry pi 4 with USB power bank (battery for 5V)
+
+![basic-drop-box-spray-inside.jpg](/basic-drop-box-spray-inside.jpg)  
+
+----  
+
