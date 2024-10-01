@@ -81,68 +81,69 @@ sudo apt install python3-rpi.gpio
 
 >Running Kali Linux on Raspberry Pi 4, the system does not use `dhcpcd.conf` and you've successfully configured the `eth0` interface using the `/etc/network/interfaces` file, I'll update the wireless access point (AP) setup to align with this configuration.  
 
-### Updated Steps for Setting up a Wireless Access Point (AP) on Kali Linux
+## Updated Steps for Setting up a Wireless Access Point (AP) on Kali Linux
 
-#### Step 1: Install Required Packages
-First, install the necessary packages:
+### Step 1: Install Required Packages  
+
+>First, install the necessary packages:  
 
 ```bash
 sudo apt update
 sudo apt install hostapd dnsmasq
 ```
 
-Enable the `hostapd` service:
+>Enable the `hostapd` service:  
 
 ```bash
 sudo systemctl unmask hostapd
 sudo systemctl enable hostapd
 ```
 
-#### Step 2: Configure Static IP for WLAN0 in `/etc/network/interfaces`
+### Step 2: Configure Static IP for WLAN0 in `/etc/network/interfaces`  
 
-Since you're using `/etc/network/interfaces`, you'll configure the static IP for the wireless interface `wlan0` directly in that file.
+>Since you're using `/etc/network/interfaces`, you'll configure the static IP for the wireless interface `wlan0` directly in that file.  
 
-1. Open the `/etc/network/interfaces` file:
+1. Open the `/etc/network/interfaces` file:  
 
-   ```bash
-   sudo nano /etc/network/interfaces
-   ```
+```bash
+sudo nano /etc/network/interfaces
+```  
 
-2. Add the following configuration for `wlan0` to assign a static IP:
+2. Add the following configuration for `wlan0` to assign a static IP:  
 
-   ```bash
+```bash
    auto wlan0
    iface wlan0 inet static
        address 192.168.4.1
        netmask 255.255.255.0
-   ```
+```  
 
-   This ensures `wlan0` uses a static IP (192.168.4.1) for your wireless access point.
+>This ensures `wlan0` uses a static IP (192.168.4.1) for your wireless access point.  
 
 3. Save and close the file.
 
-#### Step 3: Configure `dnsmasq` for DHCP
+### Step 3: Configure `dnsmasq` for DHCP
 
 1. Backup the default configuration file:
 
-   ```bash
-   sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
-   ```
+```bash
+sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+```
 
 2. Create a new configuration file:
 
-   ```bash
-   sudo nano /etc/dnsmasq.conf
-   ```
+```bash
+sudo nano /etc/dnsmasq.conf
+```
 
 3. Add the following lines to serve IP addresses for devices connecting to the access point:
 
-   ```bash
-   interface=wlan0
-   dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
-   ```
+```bash
+interface=wlan0
+dhcp-range=192.168.4.2,192.168.4.20,255.255.255.0,24h
+```
 
-   This configures `dnsmasq` to serve DHCP addresses from 192.168.4.2 to 192.168.4.20 for clients connecting to `wlan0`.
+>This configures `dnsmasq` to serve DHCP addresses from 192.168.4.2 to 192.168.4.20 for clients connecting to `wlan0`.
 
 4. Save and close the file.
 
@@ -150,9 +151,9 @@ Since you're using `/etc/network/interfaces`, you'll configure the static IP for
 
 1. Create a `hostapd` configuration file:
 
-   ```bash
-   sudo nano /etc/hostapd/hostapd.conf
-   ```
+```bash
+sudo nano /etc/hostapd/hostapd.conf
+```
 
 2. Add the following content:
 
