@@ -1,7 +1,8 @@
 # Basic Drop-box Assessment Tool
 
->Objective of this project is to create a simple device that is connect to internal network of scope to be assessed, and have a Wireless access point established to bridge from outside to the inside network.
->The Raspberry PI ethernet network is physically connected to the scope internal network, and the wireless adapter is setup as WiFi access point.
+>Objective of this project is to create a simple device that is connect to internal network to be assessed, and have a Wireless access point established to bridge from outside to the inside network.
+>This device provide a means to overcome network segmentation and spoof a valid internal MAC address in attempt to by network access control (NAC).  
+>The Raspberry PI ethernet network is physically connected to the target internal network, and the wireless adapter is setup as WiFi access point.
 
 ----  
 
@@ -10,18 +11,18 @@
 1. Install Kali Linux on Raspberry Pi4
 2. Preparing networking, NTP timezone, & changing default password of kali user.
 3. Install extra Penetration Testing Tools, Services, GPIO Libraries, daemons, etc.
-4. Setup Wireless access point on Kali OS
-5. Change Ethernet MAC address to bypass Network Access Control (NAC)
-6. Wiring power direct to GPIO connectors, and wire the seven segment display to GPIO pin outs.
+4. Setup Wireless access point on Kali OS.  
+5. Change Ethernet MAC address to bypass Network Access Control (NAC).  
+6. Wiring power direct to GPIO connectors, and wire the seven segment LED display to GPIO pin outs.
 7. Run a python script at startup as service (Create authentic look of physical device disguise with 7 segement LED display)
-8. SSH Connect via WiFi IP.
+8. SSH Connect via WiFi IP.  
 
 ----  
 
-# Install Kali on Raspberry Pi 4
+# Install Kali on Raspberry Pi 4  
 
->Download the 7z from Offsec.
->Use `balenaEtcher` as Local administrator on Windows 10 workstation to burn image to 32GB SD memory card.
+>Download the 7z from Offsec Kali Linux for Raspberry Pi.
+>Use `balenaEtcher` as Local administrator on Windows 10 workstation to burn image to 32GB SD memory card.  
 
 ----  
 
@@ -50,7 +51,7 @@ auto lo
 
 ----  
 
-# Extra Tools & Services Install
+# Extra Tools & Services Install  
 
 >Install extra Penetration Testing Tools, Services, wordlist, daemons:
 
@@ -79,13 +80,15 @@ sudo apt install python3-rpi.gpio
 
 >To set up your Raspberry Pi 4 (running Kali Linux) as a wireless access point and use SSH (via PuTTY) to connect from your laptop, follow these steps:
 
->Running Kali Linux on Raspberry Pi 4, the system does not use `dhcpcd.conf` and you've successfully configured the `eth0` interface using the `/etc/network/interfaces` file, I'll update the wireless access point (AP) setup to align with this configuration.  
+>Running Kali Linux on Raspberry Pi 4, the system does not use `dhcpcd.conf` and  
+>you've successfully configured the `eth0` interface using the `/etc/network/interfaces` file,
+>I'll update the wireless access point (AP) setup to align with this configuration.  
 
-## Updated Steps for Setting up a Wireless Access Point (AP) on Kali Linux
+## Setting up a Wireless Access Point (AP) on Kali Linux  
 
 ### Step 1: Install Required Packages  
 
->First, install the necessary packages:  
+>Install the necessary packages:  
 
 ```bash
 sudo apt update
@@ -99,7 +102,7 @@ sudo systemctl unmask hostapd
 sudo systemctl enable hostapd
 ```
 
-### Step 2: Configure Static IP for WLAN0 in `/etc/network/interfaces`  
+### Step 2: Configure Static IP for WLAN0  
 
 >Since you're using `/etc/network/interfaces`, you'll configure the static IP for the wireless interface `wlan0` directly in that file.  
 
@@ -120,11 +123,11 @@ sudo nano /etc/network/interfaces
 
 >This ensures `wlan0` uses a static IP (192.168.4.1) for your wireless access point.  
 
-3. Save and close the file.
+3. Save and close the file.  
 
-### Step 3: Configure `dnsmasq` for DHCP
+### Step 3: Configure `dnsmasq` for DHCP  
 
-1. Backup the default configuration file:
+1. Backup the default configuration file:  
 
 ```bash
 sudo mv /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
