@@ -413,3 +413,76 @@ journalctl -u seven_segment.service
 
 ----  
 
+# Raspberry Pi Maintenance  
+
+>After several months using a 32 GB size SDcard memory is out of disk space.  
+>I ran out of space but did not want too loose all my customization and hosting data content.  
+
+## Replacing 32gb with 128gb  
+
+✅ Full migration process **replacing a full 32 GB Kali SD card** with a **128 GB bootable upgrade**, while keeping all custom configs and installed Kali Linux pentest tools.  
+
+----  
+
+## Replace Full 32GB SDCard with 128GB Bootable Kali Linux (Preserving Setup)  
+
+* Working Raspberry Pi 4
+* Full 32GB Kali Linux SD card (source)
+* 128GB A1 Class 10 SD card (target)
+* Ubuntu host machine
+* Tools: `rsync`, `dd`, `losetup`, `blkid`, `gparted` or `fsck`  
+
+----  
+
+## 🔧 Step-by-Step  
+
+1. **Remove the full 32GB SD card** from Raspberry Pi 4, insert into Ubuntu host.
+2. **Unmount its partitions** using `umount` or `lsblk`.
+3. **Create a full image backup** using `dd`:
+
+   ```bash
+   sudo dd if=/dev/sdX of=~/kali32.img bs=4M status=progress conv=fsync
+   ```
+4. **Prepare a 128GB A1 SD card** (Class 10, non-A2 for Pi compatibility).
+5. **Flash official Kali Linux ARM64 image** to 128GB card using Raspberry Pi Imager.
+6. **Boot test** the 128GB card in Raspberry Pi 4 to confirm it works.
+7. **Insert 128GB SD card into Ubuntu**, identify and mount the `ROOTFS` partition.
+8. **Mount the 32GB `.img` file's root partition** using `losetup` and offset.
+9. **Use `rsync` to copy the rootfs** from image to mounted 128GB root partition:
+
+   ```bash
+   sudo rsync -aAXv ~/mnt/kali32-rootfs/ /mnt/kali128-rootfs/
+   ```
+10. **Edit `/mnt/cmdline.txt`** on the 128GB boot partition:
+
+    * Append to the end of the single line:
+
+      ```
+      init=/bin/bash
+      ```
+11. **Run `sync` and unmount all partitions** cleanly.
+12. **Eject and insert the 128GB SD into the Raspberry Pi 4.**
+13. Pi **boots into root shell** (due to `init=/bin/bash`).
+14. Run:
+
+    ```bash
+    blkid
+    ```
+
+    * Note the **correct UUID** of `/dev/mmcblk0p2`
+15. Remount root as writable:
+
+    ```bash
+    mount -o remount,rw /
+    ```
+16. **Edit `/etc/fstab`** to replace old UUID with the correct one.
+17. **Remove `init=/bin/bash`** from `/boot/cmdline.txt`
+18. Reboot:
+
+    ```bash
+    sudo reboot
+    ```
+
+>**Original Kali build** running on a **fully bootable 128GB SD card**, with full disk space and all data/configs preserved 🎯.  
+
+----  
