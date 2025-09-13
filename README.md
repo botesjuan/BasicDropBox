@@ -28,7 +28,7 @@
 
 >Updated and tested with Raspberry Pi Zero 2W with ethernet hat connected - smaller
 
-![zero2w_with_ethernet_hat.jpeg](/images/zero2w_with_ethernet_hat.jpeg)  
+![zero2w_with_ethernet_hat.jpeg](/zero2w_with_ethernet_hat.jpeg)  
 
 ----  
 
