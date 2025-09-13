@@ -204,22 +204,16 @@ To allow devices connecting to access point to access the internet, need to enab
 1. Enable IP forwarding by editing `/etc/sysctl.conf`:
 
    ```bash
-   sudo nano /etc/sysctl.conf
+   echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf   
    ```
 
-2. Uncomment the following line:
-
-   ```bash
-   net.ipv4.ip_forward=1
-   ```
-
-3. Apply the changes:
+2. Apply the changes:
 
    ```bash
    sudo sysctl -p
    ```
 
-4. Configure `iptables` for NAT:
+3. Configure `iptables` for NAT:
 
    ```bash
    sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
@@ -227,13 +221,13 @@ To allow devices connecting to access point to access the internet, need to enab
    sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
    ```
 
-5. Save the `iptables` rules so they persist after reboot:
+4. Save the `iptables` rules so they persist after reboot:
 
    ```bash
    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
    ```
 
-6. Ensure the rules are applied on boot by editing `/etc/rc.local`:
+5. Ensure the rules are applied on boot by editing `/etc/rc.local`:
 
    ```bash
    sudo nano /etc/rc.local
@@ -245,7 +239,7 @@ To allow devices connecting to access point to access the internet, need to enab
    iptables-restore < /etc/iptables.ipv4.nat
    ```
 
-7. Save and close the file.
+6. Save and close the file.
 
 #### Step 6: Start Services
 
@@ -263,6 +257,8 @@ To allow devices connecting to access point to access the internet, need to enab
    sudo systemctl enable dnsmasq
    ```
 
+3. Reboot
+   
 #### Step 7: Connect and SSH into the Raspberry Pi
 
 1. From laptop, connect to the wireless access point created (`MyAccessPoint`) using the password.  
