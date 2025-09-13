@@ -10,7 +10,7 @@
 
 >High level setup steps:
 
-1. Install Kali Linux on Raspberry Pi4
+1. Install Kali Linux on Raspberry Pi4 or Raspberry Pi Zero 2W with Ethernet Hat.  
 2. Preparing networking, NTP timezone, & changing default password of kali user.
 3. Install extra Penetration Testing Tools, Services, GPIO Libraries, daemons, etc.
 4. Setup Wireless access point on Kali OS.  
@@ -21,10 +21,14 @@
 
 ----  
 
-# Install Kali on Raspberry Pi 4  
+# Install Kali on Raspberry Pi  
 
 >Download the 7z from Offsec Kali Linux for Raspberry Pi.
 >Use `balenaEtcher` as Local administrator on Windows 10 workstation to burn image to 32GB SD memory card.  
+
+>Updated and tested with Raspberry Pi Zero 2W with ethernet hat connected - smaller
+
+![zero2w_with_ethernet_hat.jpeg](/images/zero2w_with_ethernet_hat.jpeg)  
 
 ----  
 
