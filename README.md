@@ -199,67 +199,141 @@ sudo nano /etc/hostapd/hostapd.conf
 
 #### Step 5: Enable IP Forwarding and Configure NAT
 
-To allow devices connecting to access point to access the internet, need to enable IP forwarding and set up NAT.
+To allow devices connecting to access point to access the local network, need to enable IP forwarding and set up NAT.
 
-1. Enable IP forwarding by editing `/etc/sysctl.conf`:
+1. IP Table Route Rules script  
 
-   ```bash
-   echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf   
-   ```
+Edit `/usr/local/bin/router-rules.sh`:  
 
-2. Apply the changes:
+```bash
+sudo nano /usr/local/bin/router-rules.sh
+```
 
-   ```bash
-   sudo sysctl -p
-   ```
+Paste this (overwrite existing):  
 
-3. Configure `iptables` for NAT:
+```bash
+#!/bin/bash
+set -euo pipefail
 
-   ```bash
-   sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-   sudo iptables -A FORWARD -i eth0 -o wlan0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-   sudo iptables -A FORWARD -i wlan0 -o eth0 -j ACCEPT
-   ```
+# --- settings ---
+AP_IF="wlan0"
+LAN_IF="eth0"
+AP_NET="192.168.4.0/24"
 
-4. Save the `iptables` rules so they persist after reboot:
+# Wait until both interfaces exist (and have a link/IP)
+for i in {1..30}; do
+  ip link show "$AP_IF" &>/dev/null && ip link show "$LAN_IF" &>/dev/null && break
+  sleep 1
+done
 
-   ```bash
-   sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
-   ```
+# Optional: wait until wlan0 has its static IP and eth0 has any IPv4
+for i in {1..30}; do
+  AP_HAS_IP=$(ip -4 addr show "$AP_IF" | grep -q 'inet 192\.168\.4\.' && echo yes || echo no)
+  LAN_HAS_IP=$(ip -4 addr show "$LAN_IF" | grep -q 'inet ' && echo yes || echo no)
+  [[ "$AP_HAS_IP" == "yes" && "$LAN_HAS_IP" == "yes" ]] && break
+  sleep 1
+done
 
-5. Ensure the rules are applied on boot by editing `/etc/rc.local`:
+# --- enable IPv4 forwarding at runtime ---
+sysctl -w net.ipv4.ip_forward=1 >/dev/null
 
-   ```bash
-   sudo nano /etc/rc.local
-   ```
+# (Optional but sometimes helpful on multi-homed hosts)
+# Disable reverse path filtering to avoid dropped replies
+sysctl -w net.ipv4.conf.all.rp_filter=0  >/dev/null || true
+sysctl -w net.ipv4.conf."$LAN_IF".rp_filter=0 >/dev/null || true
+sysctl -w net.ipv4.conf."$AP_IF".rp_filter=0  >/dev/null || true
 
-   Add the following line before `exit 0`:
+# --- reset tables ---
+iptables -F
+iptables -t nat -F
 
-   ```bash
-   iptables-restore < /etc/iptables.ipv4.nat
-   ```
+# --- forwarding rules (wlan0 <-> eth0) ---
+iptables -A FORWARD -i "$AP_IF" -o "$LAN_IF" -s "$AP_NET" -j ACCEPT
+iptables -A FORWARD -i "$LAN_IF" -o "$AP_IF" -d "$AP_NET" -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-6. Save and close the file.
+# --- NAT for AP clients out via eth0 ---
+iptables -t nat -A POSTROUTING -s "$AP_NET" -o "$LAN_IF" -j MASQUERADE
 
-#### Step 6: Start Services
+exit 0
+```
 
-1. Start `hostapd` and `dnsmasq` services:
+Make script executable:
 
-   ```bash
-   sudo systemctl start hostapd
-   sudo systemctl start dnsmasq
-   ```
+```bash
+sudo chmod +x /usr/local/bin/router-rules.sh
+```
 
-2. Ensure they start on boot:
+2. Update the systemd unit to also ensure forwarding
 
-   ```bash
-   sudo systemctl enable hostapd
-   sudo systemctl enable dnsmasq
-   ```
+Edit `/etc/systemd/system/router-rules.service`:
 
-3. Reboot
-   
-#### Step 7: Connect and SSH into the Raspberry Pi
+```bash
+sudo nano /etc/systemd/system/router-rules.service
+```
+
+Use this content:
+
+```ini
+[Unit]
+Description=Apply iptables NAT + enable IPv4 forwarding for AP->LAN routing
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/router-rules.sh
+RemainAfterExit=yes
+
+# If interfaces bounce, re-run this service manually
+# or add a timer/udev trigger in the future.
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Reload & enable:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable router-rules.service
+sudo systemctl start router-rules.service
+```
+
+3. Verify now and after reboot
+
+Immediate check:
+
+```bash
+sudo sysctl net.ipv4.ip_forward
+sudo iptables -t nat -L -n -v
+sudo iptables -L -n -v
+```
+
+From wireless client (`192.168.4.x`), test ping internal lan host on ethernet LAN:
+
+```bash
+ping 192.168.255.102
+ping 192.168.255.129
+```
+
+Reboot and re-test:
+
+```bash
+sudo reboot
+```
+
+Validate after reboot:  
+
+```bash
+sudo journalctl -u router-rules.service -b --no-pager
+sudo iptables -t nat -L -n -v
+sudo sysctl net.ipv4.ip_forward
+```
+
+* The script waits for both interfaces to have IPv4 addresses before applying rules; this avoids races on boot.  
+* We set `ip_forward` at runtime, so no need for `/etc/sysctl.conf`.  
+
+#### Step 6: Connect and SSH into the Raspberry Pi
 
 1. From laptop, connect to the wireless access point created (`MyAccessPoint`) using the password.  
 
