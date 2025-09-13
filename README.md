@@ -30,7 +30,7 @@
 
 # Prepare Kali on Raspberry Pi  
 
->Chane the ethernet `eth0` to automatically get DHCP IP address.
+>Change the ethernet `eth0` to automatically get DHCP IP address.
 >Edit `/etc/network/interfaces`  
 
 ```
@@ -67,10 +67,12 @@ rlwrap
 searchsploit --update
 xsltproc
 jq
-apt -y install seclists
+sudo apt -y install seclists
 ```
 
->Install raspberry pi GPIO libraries:
+>Tunnel pivot tool [CHISEL](https://github.com/jpillora/chisel?tab=readme-ov-file#install)  
+
+>Install raspberry pi GPIO libraries on Kali Linux:  
 
 ```
 sudo apt install python3-rpi.gpio
