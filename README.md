@@ -80,11 +80,11 @@ sudo apt install python3-rpi.gpio
 
 # Kali Linux WiFi Access Point Setup  
 
->To set up your Raspberry Pi 4 (running Kali Linux) as a wireless access point and use SSH (via PuTTY) to connect from your laptop, follow these steps:
+>set up Raspberry Pi 4 (running Kali Linux) as a wireless access point and use SSH (via PuTTY) to connect from laptop, follow these steps:
 
->Running Kali Linux on Raspberry Pi 4, the system does not use `dhcpcd.conf` and  
->you've successfully configured the `eth0` interface using the `/etc/network/interfaces` file,
->I'll update the wireless access point (AP) setup to align with this configuration.  
+>Running Kali Linux on Raspberry Pi 4, the system does not use `dhcpcd.conf`    
+>Configured the `eth0` interface using the `/etc/network/interfaces` file  
+>Wireless access point (AP) configuration:  
 
 ## Setting up a Wireless Access Point (AP) on Kali Linux  
 
@@ -106,7 +106,7 @@ sudo systemctl enable hostapd
 
 ### Step 2: Configure Static IP for WLAN0  
 
->Since you're using `/etc/network/interfaces`, you'll configure the static IP for the wireless interface `wlan0` directly in that file.  
+>Use `/etc/network/interfaces`, to configure the static IP for the wireless interface `wlan0` directly in that file.  
 
 1. Open the `/etc/network/interfaces` file:  
 
@@ -123,7 +123,7 @@ sudo nano /etc/network/interfaces
        netmask 255.255.255.0
 ```  
 
->This ensures `wlan0` uses a static IP (192.168.4.1) for your wireless access point.  
+>This ensures `wlan0` uses a static IP (192.168.4.1) for wireless access point.  
 
 3. Save and close the file.  
 
@@ -179,7 +179,7 @@ sudo nano /etc/hostapd/hostapd.conf
    rsn_pairwise=CCMP
    ```
 
-   Replace `MyAccessPoint` with the SSID of your choice, and `YourStrongPassword` with a strong password for the AP.
+   Replace `MyAccessPoint` with the SSID name, and `YourStrongPassword` with a strong password for the AP.
 
 3. Now tell the system to use this configuration by editing the `hostapd` default configuration:
 
@@ -197,7 +197,7 @@ sudo nano /etc/hostapd/hostapd.conf
 
 #### Step 5: Enable IP Forwarding and Configure NAT
 
-To allow devices connecting to your access point to access the internet, you'll need to enable IP forwarding and set up NAT.
+To allow devices connecting to access point to access the internet, need to enable IP forwarding and set up NAT.
 
 1. Enable IP forwarding by editing `/etc/sysctl.conf`:
 
@@ -263,7 +263,7 @@ To allow devices connecting to your access point to access the internet, you'll 
 
 #### Step 7: Connect and SSH into the Raspberry Pi
 
-1. From your laptop, connect to the wireless access point you created (`MyAccessPoint`) using the password you set.
+1. From laptop, connect to the wireless access point created (`MyAccessPoint`) using the password.  
 
 2. Once connected, use PuTTY (or any other SSH client) to connect to the Raspberry Pi's static IP address (`192.168.4.1`):
 
@@ -279,12 +279,12 @@ To allow devices connecting to your access point to access the internet, you'll 
 
 >To change the hostname on Kali Linux: Edit the `/etc/hostname` file:
 
->Replace the current hostname with your desired new hostname.
+>Replace the current hostname with desired new hostname.
 
 >Edit the `/etc/hosts` file:
 
->Find the line that says `127.0.1.1 old-hostname` (where old-hostname is your current hostname).
->Change old-hostname to your new hostname (e.g., new-hostname):
+>Find the line that says `127.0.1.1 old-hostname` (where old-hostname is current hostname).
+>Change old-hostname to new hostname (e.g., new-hostname):
 
 ## Make MAC Address Persistent  
 
@@ -331,18 +331,18 @@ ip addr show eth0
 
 # Install Python Script as Service  
 
->Automatically run your Python program at boot on your Raspberry Pi running Kali Linux, setting it up using systemd.
+>Automatically run Python program at boot on Raspberry Pi running Kali Linux, setting it up using systemd.
 >Confirm prerequisite of `python3-rpi.gpio` is installed before starting python service.  
 
 ## Step 1: Create a Service File for systemd  
 
->Create a new service file for your Python program:
+>Create a new service file for Python program:
 
 ```bash
 sudo nano /etc/systemd/system/seven_segment.service
 ```
 
->Add the following content to the service file, modifying the path to your Python script if necessary:
+>Add the following content to the service file, modifying the path to Python script if necessary:
 
 ```ini
 [Unit]
@@ -351,15 +351,15 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /path/to/your/seven_segment.py
+ExecStart=/usr/bin/python3 /path/to/x/seven_segment.py
 Restart=on-failure
-User=pi  # Replace 'pi' with your Raspberry Pi username if different
+User=pi  # Replace 'pi' with  Raspberry Pi username if different
 
 [Install]
 WantedBy=multi-user.target
 ```
 
->ExecStart: Replace `/path/to/your/seven_segment.py` with the full path to your Python script.
+>ExecStart: Replace `/path/to/x/seven_segment.py` with the full path to Python script.
 >User: Comment out username of kali for pi to run as root.  
 
 ## Step 2: Reload systemd and Enable the Service  
@@ -384,11 +384,11 @@ sudo systemctl start seven_segment.service
 ```
 sudo systemctl status seven_segment.service
 ```
-:You should see that the service is running. If there are any errors, check the logs for more details.
+:See that the service is running. If there are any errors, check the logs for more details.
 
 ## Step 3: Reboot to Test  
 
->Reboot your Raspberry Pi to confirm the script runs automatically at startup:  
+>Reboot Raspberry Pi to confirm the script runs automatically at startup:  
 
 ```
 sudo reboot
@@ -396,12 +396,12 @@ sudo reboot
 
 ## Step 4: Debugging the Service  
 
->If the service doesn't start correctly, you can check the logs with:
+>If the service doesn't start correctly, check the logs with:
 
 ```
 journalctl -u seven_segment.service
 ```
->This will help you identify any errors or issues that might be occurring.
+>This will help identify any errors or issues that might be occurring.
 
 ----  
 
