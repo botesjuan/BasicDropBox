@@ -8,6 +8,11 @@
 
 ----  
 
+<br><br><a href="https://www.buymeacoffee.com/botesjuan" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+>Thanks too all for your support by buying me ***coffee***, thanks you so much `\o/`  
+  
+----  
+
 >High level setup steps:
 
 1. Install Kali Linux on Raspberry Pi4 or Raspberry Pi Zero 2W with Ethernet Hat.  
